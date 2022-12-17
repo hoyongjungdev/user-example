@@ -165,10 +165,14 @@ components:
         - VALIDATION_ERROR
         - INVALID_AUTH_CODE
         - INVALID_PASSWORD
+        - DUPLICATE_EMAIL
+        - DUPLICATE_PHONE_NUMBER
       description: |
         * `VALIDATION_ERROR` - 입력 형식이 잘못된 경우
         * `INVALID_AUTH_CODE` - 인증 번호가 잘못된 경우
         * `INVALID_PASSWORD` - 비밀번호가 잘못된 경우
+        * `DUPLICATE_EMAIL_ADDRESS` - 중복된 이메일인 경우
+        * `DUPLICATE_PHONE_NUMBER` - 중복된 전화번호인 경우
     PhoneNumber:
       type: string
       description: 특수문자를 포함하지 않은 전화번호
