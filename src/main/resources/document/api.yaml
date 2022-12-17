@@ -1,0 +1,258 @@
+openapi: "3.0.2"
+info:
+  title: User API
+  version: "1.0"
+paths:
+  /users/authenticate/phone:
+    post:
+      description: |
+        - sendPhoneNumberAuthCode
+        - 전화번호 인증 코드 발송
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phoneNumber:
+                  $ref: '#/components/schemas/PhoneNumber'
+      responses:
+        '200':
+          $ref: '#/components/responses/200Success'
+  /users:
+    post:
+      description: |
+        - registerUser
+        - 사용자 회원 가입
+        - sendPhoneNumberAuthCode를 통해 인증 번호를 발급 받고 사용해야 합니다
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  $ref: '#/components/schemas/Email'
+                nickname:
+                  $ref: '#/components/schemas/Nickname'
+                password:
+                  $ref: '#/components/schemas/Password'
+                name:
+                  $ref: '#/components/schemas/FullName'
+                phoneNumber:
+                  $ref: '#/components/schemas/PhoneNumber'
+                authCode:
+                  $ref: '#/components/schemas/AuthCode'
+      responses:
+        '200':
+          $ref: '#/components/responses/200Success'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+  /users/login-by-email:
+    post:
+      description: |
+        - loginByEmail
+        - 이메일로 로그인
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  $ref: '#/components/schemas/Email'
+                password:
+                  $ref: '#/components/schemas/Password'
+      responses:
+        '200':
+          $ref: '#/components/responses/UserIdResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+  /users/login-by-phone:
+    post:
+      description: |
+        - loginByPhone
+        - 전화번호로 로그인
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phoneNumber:
+                  $ref: '#/components/schemas/PhoneNumber'
+                password:
+                  $ref: '#/components/schemas/Password'
+      responses:
+        '200':
+          $ref: '#/components/responses/UserIdResponse'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+  /users/{userId}:
+    get:
+      description: |
+        - getUser
+        - 내 정보 보기
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: integer
+          required: true
+      responses:
+        '200':
+          description: 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  user:
+                    type: object
+                    properties:
+                      email:
+                        $ref: '#/components/schemas/Email'
+                      nickname:
+                        $ref: '#/components/schemas/Nickname'
+                      name:
+                        $ref: '#/components/schemas/FullName'
+                      phoneNumber:
+                        $ref: '#/components/schemas/PhoneNumber'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '404':
+          $ref: '#/components/responses/404NotFound'
+  /users/password:
+    put:
+      description: |
+        - resetPassword
+        - 비밀번호 재설정
+        - sendPhoneNumberAuthCode를 통해 인증 번호를 발급 받고 사용해야 합니다
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  $ref: '#/components/schemas/Email'
+                phoneNumber:
+                  $ref: '#/components/schemas/PhoneNumber'
+                authCode:
+                  $ref: '#/components/schemas/AuthCode'
+      responses:
+        '200':
+          description: 성공 (재설정한 비밀번호 응답)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  password:
+                    $ref: '#/components/schemas/Password'
+
+components:
+  schemas:
+    ErrorCode:
+      type: string
+      enum:
+        - VALIDATION_ERROR
+        - INVALID_AUTH_CODE
+        - INVALID_PASSWORD
+      description: |
+        * `VALIDATION_ERROR` - 입력 형식이 잘못된 경우
+        * `INVALID_AUTH_CODE` - 인증 번호가 잘못된 경우
+        * `INVALID_PASSWORD` - 비밀번호가 잘못된 경우
+    PhoneNumber:
+      type: string
+      description: 특수문자를 포함하지 않은 전화번호
+      example: 01012345678
+      minLength: 9
+      maxLength: 11
+    Email:
+      type: string
+      format: email
+      maxLength: 50
+      example: user@example.com
+    Password:
+      type: string
+      minLength: 8
+      maxLength: 50
+      description: 알파벳, 숫자와 @, !, _, -, \#, $, %, *, ?, & 사용 가능
+      example: rH04@oPeq9
+    Nickname:
+      type: string
+      maxLength: 15
+      example: 사용자123
+    FullName:
+      type: string
+      maxLength: 15
+      example: 김철수
+    AuthCode:
+      type: string
+      maxLength: 6
+      description: 인증 번호
+      example: 039182
+  responses:
+    200Success:
+      description: 성공
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+    400BadRequest:
+      description: 검증 예외 발생
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              status:
+                type: string
+                description: HTTP status
+              code:
+                $ref: '#/components/schemas/ErrorCode'
+              message:
+                type: string
+                description: 에러 메시지
+    404NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+              status:
+                type: string
+                description: HTTP status
+              code:
+                $ref: '#/components/schemas/ErrorCode'
+              message:
+                type: string
+                description: 에러 메시지
+    UserIdResponse:
+      description: 성공 (사용자 ID 응답)
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              success:
+                type: boolean
+                example: true
+              userId:
+                type: integer
