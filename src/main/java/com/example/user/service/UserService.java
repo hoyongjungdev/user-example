@@ -61,6 +61,16 @@ public class UserService {
     public int loginByEmail(EmailAddress emailAddress, Password password) {
         Optional<User> userOptional = userRepository.findByEmailAddress(emailAddress);
 
+        return getUserIdAndCheckPassword(password, userOptional);
+    }
+
+    public int loginByPhone(PhoneNumber phoneNumber, Password password) {
+        Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
+
+        return getUserIdAndCheckPassword(password, userOptional);
+    }
+
+    private int getUserIdAndCheckPassword(Password password, Optional<User> userOptional) {
         InvalidPasswordException exception = new InvalidPasswordException();
 
         if (userOptional.isEmpty()) {

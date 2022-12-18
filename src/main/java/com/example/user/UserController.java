@@ -1,6 +1,7 @@
 package com.example.user;
 
 import com.example.user.application.LoginByEmailRequest;
+import com.example.user.application.LoginByPhoneRequest;
 import com.example.user.application.RegisterUserRequest;
 import com.example.user.application.SendPhoneNumberAuthCodeRequest;
 import com.example.user.application.SuccessResponse;
@@ -50,6 +51,19 @@ public class UserController {
     public UserIdResponse loginByEmail(@RequestBody @Valid LoginByEmailRequest request) {
         int userId = userService.loginByEmail(
                 new EmailAddress(request.email()),
+                new Password(request.password())
+        );
+
+        return new UserIdResponse(
+                true,
+                userId
+        );
+    }
+
+    @PostMapping("users/login-by-phone")
+    public UserIdResponse loginByPhone(@RequestBody @Valid LoginByPhoneRequest request) {
+        int userId = userService.loginByPhone(
+                new PhoneNumber(request.phoneNumber()),
                 new Password(request.password())
         );
 
