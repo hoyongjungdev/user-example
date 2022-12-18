@@ -3,9 +3,11 @@ package com.example.user.domain.value;
 import com.example.user.exception.ValidationException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Embeddable
+@EqualsAndHashCode
 public class FullName {
     private static final int MAX_LENGTH = 15;
 

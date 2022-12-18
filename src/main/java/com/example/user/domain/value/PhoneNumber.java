@@ -4,9 +4,11 @@ import com.example.user.exception.ValidationException;
 import com.example.user.util.RegexUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Embeddable
+@EqualsAndHashCode
 public class PhoneNumber {
     @Column(name = "phone_number")
     @Getter
