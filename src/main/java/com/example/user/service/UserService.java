@@ -12,8 +12,10 @@ import com.example.user.domain.value.PhoneNumber;
 import com.example.user.exception.DuplicateEmailAddressException;
 import com.example.user.exception.DuplicatePhoneNumberException;
 import com.example.user.exception.InvalidPasswordException;
+import com.example.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -68,6 +70,32 @@ public class UserService {
         Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
 
         return getUserIdAndCheckPassword(password, userOptional);
+    }
+
+    @Transactional
+    public void resetPassword(
+            EmailAddress emailAddress,
+            PhoneNumber phoneNumber,
+            String authCode,
+            Password password
+    ) {
+        Optional<User> userOptional = userRepository.findByEmailAddress(emailAddress);
+
+        UserNotFoundException notFoundException = new UserNotFoundException();
+
+        if (userOptional.isEmpty()) {
+            throw notFoundException;
+        }
+
+        User user = userOptional.get();
+
+        if (!user.getPhoneNumber().equals(phoneNumber)) {
+            throw notFoundException;
+        }
+
+        authCodeChecker.check(emailAddress, phoneNumber, authCode);
+
+        user.changePassword(password);
     }
 
     private int getUserIdAndCheckPassword(Password password, Optional<User> userOptional) {

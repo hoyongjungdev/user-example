@@ -145,19 +145,15 @@ paths:
                   $ref: '#/components/schemas/PhoneNumber'
                 authCode:
                   $ref: '#/components/schemas/AuthCode'
+                password:
+                  $ref: '#/components/schemas/Password'
       responses:
         '200':
-          description: 성공 (재설정한 비밀번호 응답)
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                    example: true
-                  password:
-                    $ref: '#/components/schemas/Password'
+          $ref: '#/components/responses/200Success'
+        '400':
+          $ref: '#/components/responses/400BadRequest'
+        '404':
+          $ref: '#/components/responses/404NotFound'
 
 components:
   schemas:

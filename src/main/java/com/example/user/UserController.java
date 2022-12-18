@@ -4,6 +4,7 @@ import com.example.user.application.GetUserResponse;
 import com.example.user.application.LoginByEmailRequest;
 import com.example.user.application.LoginByPhoneRequest;
 import com.example.user.application.RegisterUserRequest;
+import com.example.user.application.ResetPasswordRequest;
 import com.example.user.application.SendPhoneNumberAuthCodeRequest;
 import com.example.user.application.SuccessResponse;
 import com.example.user.application.UserDto;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -102,5 +104,17 @@ public class UserController {
                         user.getPhoneNumber().getValue()
                 )
         );
+    }
+
+    @PutMapping("users/password")
+    public SuccessResponse resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+        userService.resetPassword(
+                new EmailAddress(request.email()),
+                new PhoneNumber((request.phoneNumber())),
+                request.authCode(),
+                new Password(request.password())
+        );
+
+        return new SuccessResponse(true);
     }
 }

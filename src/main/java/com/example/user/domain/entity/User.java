@@ -57,4 +57,8 @@ public class User {
 
     protected User() {
     }
+
+    public void changePassword(Password password) {
+        this.password = password;
+    }
 }
