@@ -1,6 +1,6 @@
 ## 사용 기술
 - Java 17
-- Spring 3
+- Spring Boot 3
 - MySQL 8
 
 ## 실행 방법
