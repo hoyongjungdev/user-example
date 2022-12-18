@@ -1,6 +1,7 @@
 package com.example.user;
 
 import com.example.user.application.RegisterUserRequest;
+import com.example.user.application.SuccessResponse;
 import com.example.user.domain.value.EmailAddress;
 import com.example.user.domain.value.FullName;
 import com.example.user.domain.value.Nickname;
@@ -19,7 +20,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("users")
-    public void registerUser(@RequestBody @Valid RegisterUserRequest request) {
+    public SuccessResponse registerUser(@RequestBody @Valid RegisterUserRequest request) {
         userService.registerUser(
                 new EmailAddress(request.email()),
                 new Nickname(request.nickname()),
@@ -28,5 +29,7 @@ public class UserController {
                 new PhoneNumber(request.phoneNumber()),
                 request.authCode()
         );
+
+        return new SuccessResponse(true);
     }
 }
