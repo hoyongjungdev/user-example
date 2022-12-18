@@ -22,9 +22,11 @@ public class User {
     Integer id;
 
     @Embedded
+    @Getter
     EmailAddress emailAddress;
 
     @Embedded
+    @Getter
     Nickname nickname;
 
     @Embedded
@@ -32,9 +34,11 @@ public class User {
     Password password;
 
     @Embedded
+    @Getter
     FullName fullName;
 
     @Embedded
+    @Getter
     PhoneNumber phoneNumber;
 
     public User(
