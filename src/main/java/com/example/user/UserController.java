@@ -1,6 +1,7 @@
 package com.example.user;
 
 import com.example.user.application.RegisterUserRequest;
+import com.example.user.application.SendPhoneNumberAuthCodeRequest;
 import com.example.user.application.SuccessResponse;
 import com.example.user.domain.value.EmailAddress;
 import com.example.user.domain.value.FullName;
@@ -18,6 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+
+    @PostMapping("users/authenticate/phone")
+    public SuccessResponse sendPhoneNumberAuthCode(@RequestBody @Valid SendPhoneNumberAuthCodeRequest request) {
+        userService.sendPhoneNumberAuthCode(
+                new EmailAddress(request.email()),
+                new PhoneNumber(request.phoneNumber())
+        );
+
+        return new SuccessResponse(true);
+    }
 
     @PostMapping("users")
     public SuccessResponse registerUser(@RequestBody @Valid RegisterUserRequest request) {

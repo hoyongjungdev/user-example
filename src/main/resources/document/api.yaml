@@ -14,6 +14,8 @@ paths:
             schema:
               type: object
               properties:
+                email:
+                  $ref: '#/components/schemas/Email'
                 phoneNumber:
                   $ref: '#/components/schemas/PhoneNumber'
       responses:

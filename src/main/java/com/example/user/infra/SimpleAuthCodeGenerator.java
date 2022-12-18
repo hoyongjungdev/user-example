@@ -1,5 +1,6 @@
-package com.example.user.domain;
+package com.example.user.infra;
 
+import com.example.user.domain.AuthCodeChecker;
 import com.example.user.domain.value.EmailAddress;
 import com.example.user.domain.value.PhoneNumber;
 import com.example.user.exception.InvalidAuthCodeException;

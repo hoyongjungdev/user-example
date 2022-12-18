@@ -1,6 +1,7 @@
 package com.example.user.service;
 
 import com.example.user.domain.AuthCodeChecker;
+import com.example.user.domain.AuthCodeSender;
 import com.example.user.domain.entity.User;
 import com.example.user.domain.repository.UserRepository;
 import com.example.user.domain.value.EmailAddress;
@@ -17,7 +18,13 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
     private final AuthCodeChecker authCodeChecker;
+    private final AuthCodeSender authCodeSender;
     private final UserRepository userRepository;
+
+    public void sendPhoneNumberAuthCode(EmailAddress emailAddress, PhoneNumber phoneNumber) {
+        String authCode = authCodeChecker.generate(emailAddress, phoneNumber);
+        authCodeSender.send(phoneNumber, authCode);
+    }
 
     public void registerUser(
             EmailAddress emailAddress,
