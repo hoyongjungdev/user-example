@@ -11,8 +11,11 @@ import com.example.user.domain.value.Password;
 import com.example.user.domain.value.PhoneNumber;
 import com.example.user.exception.DuplicateEmailAddressException;
 import com.example.user.exception.DuplicatePhoneNumberException;
+import com.example.user.exception.InvalidPasswordException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -53,5 +56,23 @@ public class UserService {
         );
 
         userRepository.save(user);
+    }
+
+    public int loginByEmail(EmailAddress emailAddress, Password password) {
+        Optional<User> userOptional = userRepository.findByEmailAddress(emailAddress);
+
+        InvalidPasswordException exception = new InvalidPasswordException();
+
+        if (userOptional.isEmpty()) {
+            throw exception;
+        }
+
+        User user = userOptional.get();
+
+        if (!user.getPassword().equals(password)) {
+            throw exception;
+        }
+
+        return user.getId();
     }
 }

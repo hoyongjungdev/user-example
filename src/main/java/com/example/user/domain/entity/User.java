@@ -11,12 +11,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
 
 @Entity
 @Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     Integer id;
 
     @Embedded
@@ -26,6 +28,7 @@ public class User {
     Nickname nickname;
 
     @Embedded
+    @Getter
     Password password;
 
     @Embedded

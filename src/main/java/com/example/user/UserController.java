@@ -1,8 +1,10 @@
 package com.example.user;
 
+import com.example.user.application.LoginByEmailRequest;
 import com.example.user.application.RegisterUserRequest;
 import com.example.user.application.SendPhoneNumberAuthCodeRequest;
 import com.example.user.application.SuccessResponse;
+import com.example.user.application.UserIdResponse;
 import com.example.user.domain.value.EmailAddress;
 import com.example.user.domain.value.FullName;
 import com.example.user.domain.value.Nickname;
@@ -42,5 +44,18 @@ public class UserController {
         );
 
         return new SuccessResponse(true);
+    }
+
+    @PostMapping("users/login-by-email")
+    public UserIdResponse loginByEmail(@RequestBody @Valid LoginByEmailRequest request) {
+        int userId = userService.loginByEmail(
+                new EmailAddress(request.email()),
+                new Password(request.password())
+        );
+
+        return new UserIdResponse(
+                true,
+                userId
+        );
     }
 }
